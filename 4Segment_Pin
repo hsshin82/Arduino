@@ -1,0 +1,70 @@
+//4segment 제어 / control 
+
+
+int arr[10][7] = {
+    {0, 0, 0, 0, 0, 0, 1}, // 0
+    {1, 0, 0, 1, 1, 1, 1}, // 1
+    {0, 0, 1, 0, 0, 1, 0}, // 2
+    {0, 0, 0, 0, 1, 1, 0}, // 3
+    {1, 0, 0, 1, 1, 0, 0}, // 4
+    {0, 1, 0, 0, 1, 0, 0}, // 5
+    {0, 1, 0, 0, 0, 0, 0}, // 6
+    {0, 0, 0, 1, 1, 0, 1}, // 7
+    {0, 0, 0, 0, 0, 0, 0}, // 8
+    {0, 0, 0, 0, 1, 0, 0}, // 9
+    
+};
+
+const int arr1[7] = {2, 3, 4, 5, 6, 7, 8}; // 세그먼트 핀 번호
+const int arr2[3] = {9, 10,11}; // 두 세그먼트 선택 핀
+
+void setup() {
+  for (int i = 2; i < 12; i++) {
+    pinMode(i, OUTPUT); // 모든 핀을 출력 모드로 설정
+  }
+}
+
+void loop() {
+  static int secondDigit = 0; // 두 번째 세그먼트의 초기 숫자
+  static int thirdDigit = 0;
+  for (int y = 0; y < 10; y++) { // 첫 번째 세그먼트: 0~9 반복
+    for (int i = 0; i < 5; i++) { // 50회 반복하여 두 세그먼트를 빠르게 전환
+      // 첫 번째 세그먼트 출력
+      digitalWrite(arr2[0], HIGH); // 첫 번째 디스플레이 활성화
+      for (int x = 0; x < 7; x++) {
+        digitalWrite(arr1[x], arr[y][x]); // 첫 번째 디스플레이 숫자 출력
+      }
+
+      delay(5); // 짧은 시간 유지 (5ms)
+
+      digitalWrite(arr2[0], LOW); // 첫 번째 디스플레이 비활성화
+
+      // 두 번째 세그먼트 출력
+      digitalWrite(arr2[1], HIGH); // 두 번째 디스플레이 활성화
+      for (int x = 0; x < 7; x++) {
+        digitalWrite(arr1[x], arr[secondDigit][x]); // 두 번째 디스플레이 숫자 출력
+      }
+
+      delay(5); // 짧은 시간 유지 (5ms)
+
+      digitalWrite(arr2[1], LOW); // 두 번째 디스플레이 비활성화
+    
+  
+      digitalWrite(arr2[2], HIGH); // 두 번째 디스플레이 활성화
+      for (int x = 0; x < 7; x++) {
+        digitalWrite(arr1[x], arr[thirdDigit][x]); // 두 번째 디스플레이 숫자 출력
+      }
+
+      delay(5); // 짧은 시간 유지 (5ms)
+
+      digitalWrite(arr2[2], LOW);
+    
+    }
+  }
+
+  // 첫 번째 디스플레이가 한 바퀴 돌면 두 번째 디스플레이의 숫자를 증가
+  secondDigit = (secondDigit + 1) % 10; // 두 번째 디스플레이 숫자 1씩 증가
+  if(secondDigit == 0){
+    thirdDigit = (thirdDigit + 1) %10;
+  }
+}
