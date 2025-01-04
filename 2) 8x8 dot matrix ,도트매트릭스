@@ -1,36 +1,48 @@
 // ROW(LOW)        COL(HIGH)                
-// 1)9-> A0       1)13-> A0              
-// 2)14-> A1      2)3-> A0  
-// 3)8-> A2       3)4-> A0
-// 4)12-> A3      4)10-> A0
-// 5)1-> A4       5)6-> A0
-// 6)7-> A5       6)11-> A0
-// 7)2-> 0        7)15-> A0
-// 8)5-> 1        8)16-> A0
+// 1)9-> A0       1)13-> 4              
+// 2)14-> A1      2)3-> 5  
+// 3)8-> A2       3)4-> 6
+// 4)12-> A3      4)10-> 7
+// 5)1-> A4       5)6-> 8
+// 6)7-> A5       6)11-> 9/ 
+// 7)2-> 2        7)15-> 10
+// 8)5-> 3        8)16-> 11
 
 // PIN 배열
 //             16-9
 //             1-8   (dotmatrix 번호 이쪽에 표기됨 기준)
 
 
-const int row[9] = {A0,A1,A2,A3,A4,A5,0,1};
-const int column = 13;
+const int row[8] = {A0,A1,A2,A3,A4,A5,2,3};
+const int column[8] = {4,5,6,7,8,9,10,11};
 
-void setup() {
-  pinMode(row1, OUTPUT);
-  pinMode(row, OUTPUT);   // 행 핀을 출력으로 설정
-  pinMode(column, OUTPUT); // 열 핀을 출력으로 설정
+void setup() 
+{
+  for (int i = 0;i<8;i++)
+  {
+    pinMode(row[i],OUTPUT);
+    pinMode(column[i],OUTPUT);
+    digitalWrite(row[i],HIGH);
+    digitalWrite(column[i],LOW);
+  }
 }
 
-void loop() {
-  // LED 켜기: 행(row)은 LOW, 열(column)은 HIGH
-  digitalWrite(row1, HIGH);
-  digitalWrite(row, HIGH); //13
-  digitalWrite(column, LOW); //9
-  delay(1000);
-}
-
-
-
-
-
+void loop() 
+{
+  for (int i = 0; i<8; i++)
+  {
+    digitalWrite(row[i],LOW);
+     for (int j=0; j<8; j++)
+    {
+      digitalWrite(column[j],HIGH);
+    }
+    
+    delay(1000);
+    
+    for (int m = 0; m<8; m++)
+    {
+      digitalWrite(row[m],HIGH);
+      digitalWrite(column[m],LOW);
+    }
+  }
+}  
