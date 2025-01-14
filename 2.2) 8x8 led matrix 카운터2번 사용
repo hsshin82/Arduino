@@ -1,0 +1,353 @@
+// ROW(LOW)        COL(HIGH)                
+// 1)9-> A0       1)13-> 4              
+// 2)14-> A1      2)3-> 5  
+// 3)8-> A2       3)4-> 6
+// 4)12-> A3      4)10-> 7
+// 5)1-> A4       5)6-> 8
+// 6)7-> A5       6)11-> 9/ 
+// 7)2-> 2        7)15-> 10
+// 8)5-> 3        8)16-> 11
+
+// PIN 배열
+//             16-9
+//             1-8   (dotmatrix 번호 이쪽에 표기됨 기준)
+const int one[8][8] = 
+{
+  {0,0,0,0,1,0,0,0},
+  {0,0,0,1,1,0,0,0},
+  {0,0,0,0,1,0,0,0},
+  {0,0,0,0,1,0,0,0},
+  {0,0,0,0,1,0,0,0},
+  {0,0,0,0,1,0,0,0},
+  {0,0,0,1,1,1,0,0},
+  {0,0,0,0,0,0,0,0},
+};
+
+const int two[8][8] = 
+{
+  {0,0,1,1,1,1,0,0},
+  {0,1,0,0,0,0,1,0},
+  {0,0,0,0,0,0,1,0},
+  {0,0,0,0,0,1,0,0},
+  {0,0,0,0,1,0,0,0},
+  {0,0,0,1,0,0,0,0},
+  {0,1,1,1,1,1,1,0},
+  {0,0,0,0,0,0,0,0},
+};
+
+const int three[8][8] = 
+{
+  {0,0,1,1,1,1,0,0},
+  {0,1,0,0,0,0,1,0},
+  {0,0,0,0,0,0,1,0},
+  {0,0,1,1,1,1,0,0},
+  {0,0,0,0,0,0,1,0},
+  {0,0,0,0,0,0,1,0},
+  {0,1,1,1,1,1,0,0},
+  {0,0,0,0,0,0,0,0},
+};
+
+const int four[8][8] = 
+{
+  {0,0,0,0,1,1,0,0},
+  {0,0,0,1,0,1,0,0},
+  {0,0,1,0,0,1,0,0},
+  {0,1,0,0,0,1,0,0},
+  {1,1,1,1,1,1,1,0},
+  {0,0,0,0,0,1,0,0},
+  {0,0,0,0,0,1,0,0},
+  {0,0,0,0,0,0,0,0},
+};
+
+const int five[8][8] = 
+{
+  {0,1,1,1,1,1,1,0},
+  {0,1,0,0,0,0,0,0},
+  {0,1,1,1,1,1,0,0},
+  {0,0,0,0,0,0,1,0},
+  {0,0,0,0,0,0,1,0},
+  {0,1,0,0,0,0,1,0},
+  {0,0,1,1,1,1,0,0},
+  {0,0,0,0,0,0,0,0},
+};
+
+const int six[8][8] = 
+{
+  {0,0,1,1,1,1,0,0},
+  {0,1,0,0,0,0,1,0},
+  {0,1,0,0,0,0,0,0},
+  {0,1,1,1,1,1,0,0},
+  {0,1,0,0,0,0,1,0},
+  {0,1,0,0,0,0,1,0},
+  {0,0,1,1,1,1,0,0},
+  {0,0,0,0,0,0,0,0},
+};
+
+const int seven[8][8] = 
+{
+  {0,1,1,1,1,1,1,0},
+  {0,0,0,0,0,0,1,0},
+  {0,0,0,0,0,1,0,0},
+  {0,0,0,0,1,0,0,0},
+  {0,0,0,1,0,0,0,0},
+  {0,0,0,1,0,0,0,0},
+  {0,0,0,1,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+};
+
+const int eight[8][8] = 
+{
+  {0,0,1,1,1,1,0,0},
+  {0,1,0,0,0,0,1,0},
+  {0,1,0,0,0,0,1,0},
+  {0,0,1,1,1,1,0,0},
+  {0,1,0,0,0,0,1,0},
+  {0,1,0,0,0,0,1,0},
+  {0,0,1,1,1,1,0,0},
+  {0,0,0,0,0,0,0,0},
+};
+
+const int nine[8][8] = 
+{
+  {0,0,1,1,1,1,0,0},
+  {0,1,0,0,0,0,1,0},
+  {0,1,0,0,0,0,1,0},
+  {0,0,1,1,1,1,1,0},
+  {0,0,0,0,0,0,1,0},
+  {0,0,0,0,0,0,1,0},
+  {0,0,1,1,1,1,0,0},
+  {0,0,0,0,0,0,0,0},
+};
+
+
+
+
+
+const int row[8] = { A0,A1,A2,A3,A4,A5,2,3 };
+const int column[8] = { 4,5,6,7,8,9,10,11 };
+static int counter = 0;
+static int counter2 = 0;
+
+void setup()
+{
+    for (int i = 0; i < 8; i++)
+    {
+        pinMode(row[i], OUTPUT);
+        pinMode(column[i], OUTPUT);
+    };
+}
+
+void loop()
+{
+int i,j;
+
+////////////////////////////////////////////////////////////////
+////////////loop 반환 마다 전원 OFF                      ////////
+////////////////////////////////////////////////////////////////
+  if (counter2 == 0)
+  {
+    for (i = 0; i<8; i++)
+    {
+    digitalWrite(row[i],HIGH);
+    digitalWrite(column[i],LOW);
+    }
+    delay(2);
+  }
+////////////////////////////////////////////////////////////////
+////////// 1. 한줄당 2ms -> 8줄 켜면 8x2 = 16ms    //////////////                     
+////////// 2. 16ms 가 0.016초 x 60 (counter) 하면 거의 1초 //////
+///////////3. 번호당 1초씩 진행 한다.////////////////////////////
+
+
+
+if (counter < 60) 
+{
+  if (counter2 < 8) 
+  {
+    digitalWrite(row[counter2], LOW);
+    for (j = 0; j < 8; j++) 
+    {
+      digitalWrite(column[j], one[counter2][j]);
+    }
+    delay(2);
+    digitalWrite(row[counter2], HIGH);
+    counter++;
+    counter2++;
+  } 
+  else if (counter2 == 8) 
+  {
+    counter2 = 0;
+  }
+}
+///////////////////////////////////////////////////////////////////////////////////////
+else if (counter >= 60 && counter < 120) 
+{
+  if (counter2 < 8) 
+  {
+    digitalWrite(row[counter2], LOW);
+    for (j = 0; j < 8; j++) 
+    {
+      digitalWrite(column[j], two[counter2][j]);
+    }
+    delay(2);
+    digitalWrite(row[counter2], HIGH);
+    counter++;
+    counter2++;
+  } 
+  else if (counter2 == 8) 
+  {
+    counter2 = 0;
+  }
+} 
+///////////////////////////////////////////////////////////////////////////////
+else if (counter >= 120 && counter < 180) 
+{
+  if (counter2 < 8) 
+  {
+    digitalWrite(row[counter2], LOW);
+    for (j = 0; j < 8; j++) 
+    {
+      digitalWrite(column[j], three[counter2][j]);
+    }
+    delay(2);
+    digitalWrite(row[counter2], HIGH);
+    counter++;
+    counter2++;
+  } 
+  else if (counter2 == 8) 
+  {
+    counter2 = 0;
+  }
+} 
+///////////////////////////////////////////////////////////////
+else if (counter >= 180 && counter < 240) 
+{
+  if (counter2 < 8) 
+  {
+    digitalWrite(row[counter2], LOW);
+    for (j = 0; j < 8; j++) 
+    {
+      digitalWrite(column[j], four[counter2][j]);
+    }
+    delay(2);
+    digitalWrite(row[counter2], HIGH);
+    counter++;
+    counter2++;
+  } 
+  else if (counter2 == 8) 
+  {
+    counter2 = 0;
+  }
+} 
+//////////////////////////////////////////////////////////////////////////////////
+else if (counter >= 240 && counter < 300) 
+{
+  if (counter2 < 8) 
+  {
+    digitalWrite(row[counter2], LOW);
+    for (j = 0; j < 8; j++) 
+    {
+      digitalWrite(column[j], five[counter2][j]);
+    }
+    delay(2);
+    digitalWrite(row[counter2], HIGH);
+    counter++;
+    counter2++;
+  } 
+  else if (counter2 == 8) 
+  {
+    counter2 = 0;
+  }
+} 
+////////////////////////////////////////////////////////////////////////////////
+else if (counter >= 300 && counter < 360) 
+{
+  if (counter2 < 8) 
+  {
+    digitalWrite(row[counter2], LOW);
+    for (j = 0; j < 8; j++) 
+    {
+      digitalWrite(column[j], six[counter2][j]);
+    }
+    delay(2);
+    digitalWrite(row[counter2], HIGH);
+    counter++;
+    counter2++;
+  } 
+  else if (counter2 == 8) 
+  {
+    counter2 = 0;
+  }
+} 
+//////////////////////////////////////////////////////////////////////////////////
+else if (counter >= 360 && counter < 420) 
+{
+  if (counter2 < 8) 
+  {
+    digitalWrite(row[counter2], LOW);
+    for (j = 0; j < 8; j++) 
+    {
+      digitalWrite(column[j], seven[counter2][j]);
+    }
+    delay(2);
+    digitalWrite(row[counter2], HIGH);
+    counter++;
+    counter2++;
+  } 
+  else if (counter2 == 8) 
+  {
+    counter2 = 0;
+  }
+} 
+////////////////////////////////////////////////////////////////////////////////////
+else if (counter >= 420 && counter < 480) 
+{
+  if (counter2 < 8) 
+  {
+    digitalWrite(row[counter2], LOW);
+    for (j = 0; j < 8; j++) 
+    {
+      digitalWrite(column[j], eight[counter2][j]);
+    }
+    delay(2);
+    digitalWrite(row[counter2], HIGH);
+    counter++;
+    counter2++;
+  } 
+  else if (counter2 == 8) 
+  {
+    counter2 = 0;
+  }
+} 
+/////////////////////////////////////////////////////////////////////////
+else if (counter >= 480 && counter < 540) 
+{
+  if (counter2 < 8) 
+  {
+    digitalWrite(row[counter2], LOW);
+    for (j = 0; j < 8; j++) 
+    {
+      digitalWrite(column[j], nine[counter2][j]);
+    }
+    delay(2);
+    digitalWrite(row[counter2], HIGH);
+    counter++;
+    counter2++;
+  } 
+  else if (counter2 == 8) 
+  {
+    counter2 = 0;
+  }
+}
+
+
+////////////////// 숫자 9까지 표현하고 마지막에 리셋을 위해 counter = 0 ///////////////////////
+
+if (counter >= 540)
+{
+  counter = 0;
+}
+
+
+
+}
